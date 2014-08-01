@@ -27,7 +27,7 @@ int[][] mappings = {
   {1, 2},
   {1, 3},
   {2, 3},
-  
+
   // "spokes" connecting inner K3 to K3s inside cycle
   {1, 4},
   {2, 5},
@@ -41,7 +41,7 @@ int[][] mappings = {
   {6, 11},
   {6, 12},
   {11, 12},
-  
+
   // "spokes" connecting to outer-most K3s or outer cycle
   {7, 16},
   {8, 13},
@@ -49,7 +49,7 @@ int[][] mappings = {
   {10, 14},
   {11, 22},
   {12, 15},
-  
+
   // outer K3s
   {13, 17},
   {13, 18},
@@ -60,7 +60,7 @@ int[][] mappings = {
   {15, 23},
   {15, 24},
   {23, 24},
-  
+
   // final edges to complete outer cycle
   {16, 17},
   {18, 19},
@@ -96,10 +96,10 @@ void setup() {
   int psi = 0;
   mods = new Module[vertexCount];
   for (
-    int counter = 0;
-    counter < vertexCount;
-    ++counter, psi += 120
-  ) {
+      int counter = 0;
+      counter < vertexCount;
+      ++counter, psi += 120
+      ) {
     int unitX = polarX(psi, radius) + windowWidth / 2;
     int unitY = polarY(psi, radius) + windowHeight / 2;
     mods[counter] = new Module(unitTmp, unitTmp, unitX, unitY, psi, radius, radiusRate);
@@ -108,7 +108,7 @@ void setup() {
       psi += 4;
     }
   }
-  
+
   setupGif();
 }
 
@@ -125,7 +125,7 @@ void draw() {
     int module2 = mappings[i][1] - 1;
     drawModuleLine(mods[module1], mods[module2], 255);
   }
-  
+
   gifAddFrame();
 }
 
@@ -149,10 +149,10 @@ class Module {
     this.yOffset = polarY(this.psi, this.radius);
   }
   float getY() {
-     return this.yOffset + this.y; 
+    return this.yOffset + this.y;
   }
   float getX() {
-     return this.xOffset + this.x; 
+    return this.xOffset + this.x;
   }
   // Custom method for drawing the object
   void draw() {
