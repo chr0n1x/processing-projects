@@ -15,6 +15,7 @@ void gifAddFrame() {
   gifExport.addFrame();
 }
 
+boolean record = false;
 int unit = 40;
 int windowWidth = 1200;
 int windowHeight = 840;
@@ -109,7 +110,9 @@ void setup() {
     }
   }
 
-  setupGif();
+  if (record) {
+    setupGif();
+  }
 }
 
 void draw() {
@@ -126,7 +129,9 @@ void draw() {
     drawModuleLine(mods[module1], mods[module2], 255);
   }
 
-  gifAddFrame();
+  if (record) {
+    gifAddFrame();
+  }
 }
 
 class Module {
