@@ -19,9 +19,38 @@ boolean record = false;
 int unit = 40;
 int windowWidth = 1200;
 int windowHeight = 840;
+int originX = windowWidth / 2;
+int originY = windowHeight / 2;
 int vertexCount = 24;
 int vertexDim = 8;
 Module[] mods;
+
+int[][] coordinates = {
+  {originX + 16, originY - 16},
+  {originX + 24, originY + 16},
+  {originX - 16, originY},
+  {originX + 32, originY - 40},
+  {originX + 40, originY + 40},
+  {originX - 48, originY + 8},
+  {originX + 16, originY - 64},
+  {originX + 56, originY - 72},
+  {originX + 64, originY + 48},
+  {originX + 24, originY + 64},
+  {originX - 72, originY + 24},
+  {originX - 72, originY - 16},
+  {originX + 80, originY - 72},
+  {originX + 16, originY + 88},
+  {originX - 80, originY - 40},
+  {originX - 16, originY - 120},
+  {originX + 96, originY - 96},
+  {originX + 104, originY - 56},
+  {originX + 96, originY + 64},
+  {originX + 40, originY + 112},
+  {originX - 8, originY + 112},
+  {originX - 104, originY + 56},
+  {originX - 128, originY - 56},
+  {originX - 96, originY - 80}
+};
 
 int[][] mappings = {
   // central K3
@@ -71,12 +100,16 @@ int[][] mappings = {
   {24, 16}
 };
 
-int polarX(int psi, int radius) {
+int polarX(float psi, int radius) {
   return int(radius * cos(psi));
 }
 
-int polarY(int psi, int radius) {
+int polarY(float psi, int radius) {
   return int(radius * sin(psi));
+}
+
+int originDistance(float y, float x) {
+  return floor(sqrt(pow((originX - x), 2) + pow((originY - y), 2)));
 }
 
 void drawModuleLine(Module one, Module two, int col) {
@@ -92,8 +125,7 @@ void setup() {
 
   // number of vertices in the Markstrom graph
   int radiusRate = 32;
-  int radius = windowWidth / vertexCount;
-  int unitTmp = unit / 2;
+  int unitTmp = 4;
   int psi = 0;
   mods = new Module[vertexCount];
   for (
@@ -101,11 +133,10 @@ void setup() {
       counter < vertexCount;
       ++counter, psi += 120
       ) {
-    int unitX = polarX(psi, radius) + windowWidth / 2;
-    int unitY = polarY(psi, radius) + windowHeight / 2;
-    mods[counter] = new Module(unitTmp, unitTmp, unitX, unitY, psi, radius, radiusRate);
+    int unitX = coordinates[counter][0];
+    int unitY = coordinates[counter][1];
+    mods[counter] = new Module(unitTmp, unitTmp, unitX, unitY, radiusRate);
     if (counter % 2 == 0 && counter > 0) {
-      radius += radiusRate;
       psi += 4;
     }
   }
@@ -136,20 +167,20 @@ void draw() {
 
 class Module {
   int xOffset, yOffset;
-  int psi, radius, rate;
-  float x, y;
+  int radius, rate;
+  float x, y, psi;
   // Contructor
-  Module(int xOffsetTemp, int yOffsetTemp, int xTemp, int yTemp, int psi, int radius, int rate) {
+  Module(int xOffsetTemp, int yOffsetTemp, int xTemp, int yTemp, int rate) {
     this.xOffset = xOffsetTemp;
     this.yOffset = yOffsetTemp;
     this.x = xTemp;
     this.y = yTemp;
-    this.psi = psi;
-    this.radius = radius;
+    this.psi = atan2(this.y, this.x);
+    this.radius = originDistance(this.y, this.x);
     this.rate = rate;
   }
   void update() {
-    this.psi += this.rate;
+    this.psi += this.rate * this.radius;
     this.xOffset = polarX(this.psi, this.radius);
     this.yOffset = polarY(this.psi, this.radius);
   }
